@@ -46,7 +46,7 @@
 /*    (this avoid to user the need of an external signal generator).          */
 /*  - If this literal is not defined: User has to connect an external signal  */
 /*    generator on the selected ADC input to run this example.                */
-// #define WAVEFORM_VOLTAGE_GENERATION_FOR_TEST
+#define WAVEFORM_VOLTAGE_GENERATION_FOR_TEST
 
 /* User can use this section to tailor ADCx instance under use and associated
    resources */
