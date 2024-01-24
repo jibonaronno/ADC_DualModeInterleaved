@@ -6734,7 +6734,7 @@ LOAD C:/ST/STM32CubeIDE_1.13.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
  .debug_line    0x000000000001ccfe      0x58b ./Example/User/CM7/sysmem.o
  .debug_line    0x000000000001d289       0x7a ./Example/User/Startup/startup_stm32h745zitx.o
 
-.debug_str      0x0000000000000000   0x1987fb
+.debug_str      0x0000000000000000   0x1987f9
  .debug_str     0x0000000000000000   0x190456 ./Drivers/BSP/STM32H745I_Nucleo/stm32h7xx_nucleo.o
                                      0x190be1 (size before relaxing)
  .debug_str     0x0000000000190456      0x2cb ./Drivers/CMSIS/system_stm32h7xx.o
@@ -6765,15 +6765,15 @@ LOAD C:/ST/STM32CubeIDE_1.13.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
                                      0x19018b (size before relaxing)
  .debug_str     0x0000000000196ce0      0x2ff ./Drivers/STM32H7xx_HAL_Driver/stm32h7xx_hal_uart_ex.o
                                      0x18f74b (size before relaxing)
- .debug_str     0x0000000000196fdf     0x1148 ./Example/User/CM7/main.o
-                                     0x191c81 (size before relaxing)
- .debug_str     0x0000000000198127       0x8d ./Example/User/CM7/stm32h7xx_hal_msp.o
-                                     0x1915b8 (size before relaxing)
- .debug_str     0x00000000001981b4      0x127 ./Example/User/CM7/stm32h7xx_it.o
-                                     0x1901f6 (size before relaxing)
- .debug_str     0x00000000001982db      0x4e4 ./Example/User/CM7/sysmem.o
+ .debug_str     0x0000000000196fdf     0x1146 ./Example/User/CM7/main.o
+                                     0x191c7f (size before relaxing)
+ .debug_str     0x0000000000198125       0x8d ./Example/User/CM7/stm32h7xx_hal_msp.o
+                                     0x1915b6 (size before relaxing)
+ .debug_str     0x00000000001981b2      0x127 ./Example/User/CM7/stm32h7xx_it.o
+                                     0x1901f4 (size before relaxing)
+ .debug_str     0x00000000001982d9      0x4e4 ./Example/User/CM7/sysmem.o
                                        0x60fc (size before relaxing)
- .debug_str     0x00000000001987bf       0x3c ./Example/User/Startup/startup_stm32h745zitx.o
+ .debug_str     0x00000000001987bd       0x3c ./Example/User/Startup/startup_stm32h745zitx.o
                                          0x98 (size before relaxing)
 
 .debug_frame    0x0000000000000000     0x6334

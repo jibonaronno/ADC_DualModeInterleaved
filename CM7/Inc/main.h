@@ -60,12 +60,12 @@
 #define ADCx_RELEASE_RESET()            __HAL_RCC_ADC12_RELEASE_RESET()
 
 /* Definition of ADCx channels */
-#define ADCx_CHANNELa                   ADC_CHANNEL_18
+#define ADCx_CHANNELa                   ADC_CHANNEL_3 // was 18 PA4 , Now PA6
 
 /* Definition of ADCx channels pins */
 #define ADCx_CHANNELa_GPIO_CLK_ENABLE() __HAL_RCC_GPIOA_CLK_ENABLE()
 #define ADCx_CHANNELa_GPIO_PORT         GPIOA
-#define ADCx_CHANNELa_PIN               GPIO_PIN_4
+#define ADCx_CHANNELa_PIN               GPIO_PIN_6
 
 /* Definition of ADCx DMA resources */
 #define ADCx_DMA_CLK_ENABLE()           __HAL_RCC_DMA1_CLK_ENABLE()
@@ -87,12 +87,12 @@
 #define ADCy_RELEASE_RESET()            __HAL_RCC_ADC12_RELEASE_RESET()
 
 /* Definition of ADCy channels */
-#define ADCy_CHANNELa                   ADC_CHANNEL_19
+#define ADCy_CHANNELa                   ADC_CHANNEL_7 // was 19 PA5 , Now PA7
 
 /* Definition of ADCy channels pins */
 #define ADCy_CHANNELa_GPIO_CLK_ENABLE() __HAL_RCC_GPIOA_CLK_ENABLE()
 #define ADCy_CHANNELa_GPIO_PORT         GPIOA
-#define ADCy_CHANNELa_PIN               GPIO_PIN_5
+#define ADCy_CHANNELa_PIN               GPIO_PIN_7
 
 /* Definition of ADCy NVIC resources */
 #define ADCy_IRQn                       ADC_IRQn
