@@ -41,11 +41,13 @@
 #define RANGE_16BITS                   ((uint32_t)65535)    /* Max digital value with a full range of 16 bits */
 
 /* ADC parameters */
-#define ADCCONVERTEDVALUES_BUFFER_SIZE ((uint32_t)  256)    /* Size of array containing ADC converted values */
+//#define ADCCONVERTEDVALUES_BUFFER_SIZE ((uint32_t)  256)    /* Size of array containing ADC converted values */
+#define ADCCONVERTEDVALUES_BUFFER_SIZE ((uint32_t)  4)    /* Size of array containing ADC converted values */
 
 #if defined(ADC_TRIGGER_FROM_TIMER)
 /* Timer for ADC trigger parameters */
-#define TIMER_FREQUENCY                ((uint32_t) 1000)    /* Timer frequency (unit: Hz). With a timer 16 bits and time base freq min 1Hz, range is min=1Hz, max=32kHz. */
+//#define TIMER_FREQUENCY                ((uint32_t) 1000)    /* Timer frequency (unit: Hz). With a timer 16 bits and time base freq min 1Hz, range is min=1Hz, max=32kHz. */
+#define TIMER_FREQUENCY                ((uint32_t) 32000)    /* Timer frequency (unit: Hz). With a timer 16 bits and time base freq min 1Hz, range is min=1Hz, max=32kHz. */
 #define TIMER_FREQUENCY_RANGE_MIN      ((uint32_t)    1)    /* Timer minimum frequency (unit: Hz), used to calculate frequency range. With a timer 16 bits, maximum frequency will be 32000 times this value. */
 #define TIMER_PRESCALER_MAX_VALUE      (0xFFFF-1)           /* Timer prescaler maximum value (0xFFFF for a timer 16 bits) */
 #endif /* ADC_TRIGGER_FROM_TIMER */
@@ -140,6 +142,10 @@ static void WaveformVoltageGenerationForTest(void);
 
 
 UART_HandleTypeDef huart3;
+
+int aShot = 0;
+int bShot = 0;
+int convrate = 0;
 
 
 /**
@@ -301,6 +307,8 @@ int main(void)
   /*  - ADC master results in the 16 LSB [15:0]                               */
   /*  - ADC slave results in the 16 MSB [31:16]                               */
 
+  aShot  = HAL_GetTick();
+
   /* Infinite loop */
   while (1)
   {
@@ -319,10 +327,19 @@ int main(void)
       BSP_LED_On(LED1);
     }
 
-    if(ubADCDualConversionComplete == SET)
+    if(HAL_GetTick() > (aShot + 1000))
     {
+    	aShot  = HAL_GetTick();
+
     	myprintf("ADC[1] = %d  ADC[2] = %d \r\n", aADCxConvertedValues[0], aADCyConvertedValues[0]);
+    	myprintf("Rate : %d\r\n", convrate);
+    	convrate = 0;
     }
+
+//    if(ubADCDualConversionComplete == SET)
+//    {
+//    	myprintf("ADC[1] = %d  ADC[2] = %d \r\n", aADCxConvertedValues[0], aADCyConvertedValues[0]);
+//    }
 
     /* For information: ADC conversion results are stored into array          */
     /* "aADCDualConvertedValues" (for debug: check into watch window)         */
@@ -605,7 +622,7 @@ static void TIM_Config(void)
 
   /* Configure timer parameters */
   TimHandle.Init.Period            = ((timer_clock_frequency / (timer_prescaler * TIMER_FREQUENCY)) - 1);
-  TimHandle.Init.Prescaler         = (timer_prescaler - 1);
+  TimHandle.Init.Prescaler         = 40; //(timer_prescaler - 1);
   TimHandle.Init.ClockDivision     = TIM_CLOCKDIVISION_DIV1;
   TimHandle.Init.CounterMode       = TIM_COUNTERMODE_UP;
   TimHandle.Init.RepetitionCounter = 0x0;
@@ -769,6 +786,8 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *AdcHandle)
 
 #if defined(ADC_TRIGGER_FROM_TIMER)
   uint32_t tmp_index = 0;
+
+  convrate++;
 
   /* For the purpose of this example, dispatch dual conversion values         */
   /* into 2 arrays corresponding to each ADC conversion values.               */

@@ -1,5 +1,6 @@
-C:/Users/jibon/STM32CubeIDE/workspace_1.13.1/ADC_DualModeInterleaved/CM7/Src/main.c:764:13:Error_Handler	1
-C:/Users/jibon/STM32CubeIDE/workspace_1.13.1/ADC_DualModeInterleaved/CM7/Src/main.c:142:5:main	32
-C:/Users/jibon/STM32CubeIDE/workspace_1.13.1/ADC_DualModeInterleaved/CM7/Src/main.c:684:6:HAL_ADC_ConvCpltCallback	3
-C:/Users/jibon/STM32CubeIDE/workspace_1.13.1/ADC_DualModeInterleaved/CM7/Src/main.c:715:6:HAL_ADC_ConvHalfCpltCallback	3
-C:/Users/jibon/STM32CubeIDE/workspace_1.13.1/ADC_DualModeInterleaved/CM7/Src/main.c:746:6:HAL_ADC_ErrorCallback	0
+C:/Users/jibon/STM32CubeIDE/workspace_1.13.1/ADC_DualModeInterleaved/CM7/Src/main.c:863:13:Error_Handler	1
+C:/Users/jibon/STM32CubeIDE/workspace_1.13.1/ADC_DualModeInterleaved/CM7/Src/main.c:199:6:myprintf	1
+C:/Users/jibon/STM32CubeIDE/workspace_1.13.1/ADC_DualModeInterleaved/CM7/Src/main.c:219:5:main	37
+C:/Users/jibon/STM32CubeIDE/workspace_1.13.1/ADC_DualModeInterleaved/CM7/Src/main.c:781:6:HAL_ADC_ConvCpltCallback	1
+C:/Users/jibon/STM32CubeIDE/workspace_1.13.1/ADC_DualModeInterleaved/CM7/Src/main.c:814:6:HAL_ADC_ConvHalfCpltCallback	1
+C:/Users/jibon/STM32CubeIDE/workspace_1.13.1/ADC_DualModeInterleaved/CM7/Src/main.c:845:6:HAL_ADC_ErrorCallback	0
