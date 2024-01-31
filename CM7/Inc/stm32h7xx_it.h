@@ -44,6 +44,8 @@ void ADCx_IRQHandler(void);
 void ADCx_DMA_IRQHandler(void);
 void ADCy_DMA_IRQHandler(void);
 
+void USART3_IRQHandler(void);
+
 #if defined(WAVEFORM_VOLTAGE_GENERATION_FOR_TEST)
 void TIM6_DAC_IRQHandler(void);
 void DACx_CHANNELa_DMA_IRQHandler(void);

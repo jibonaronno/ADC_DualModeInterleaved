@@ -142,10 +142,160 @@ static void WaveformVoltageGenerationForTest(void);
 
 
 UART_HandleTypeDef huart3;
+uint8_t uart3_raw[10];
+volatile int rx_flagA = 0;
+volatile int rx_flagB = 0;
+volatile int rx_flagG = 0;
 
 int aShot = 0;
 int bShot = 0;
 int convrate = 0;
+
+char writeBuf[100];
+
+char strA1[50];
+volatile uint16_t ad1_raw[5];
+const int adcChannelCount = 2;
+volatile int adcConversionComplete = 0;
+volatile int lock = 0;
+volatile uint32_t millis = 0;
+volatile uint32_t conv_rate = 0;
+
+uint32_t ad1 = 0;
+uint32_t ad2 = 0;
+
+int32_t sawtooth_buf1[200];
+int32_t sawtooth_buf2[200];
+int32_t signal_buf[200];
+int32_t signal_buf1[200];
+int32_t signal_buf2[200];
+int32_t kalman_buf1[200];
+int32_t kalman_buf2[200];
+int32_t peaks_buff1[200];
+int32_t peaks_buff2[200];
+volatile int signal_buffer_in_queue = 1;
+volatile int gidxB = 0;
+volatile int gidxA = 0;
+
+volatile uint32_t relative_sawtooth_voltage = 0;
+
+int FindPeak(uint32_t *sig)
+{
+
+	if((sig[0] < sig[1]) && (sig[2] < sig[1]))
+	{
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+void insert_new_value(int32_t *buf, int32_t new_value)
+{
+	for(gidxA=0;gidxA<199;gidxA++)
+	{
+		buf[gidxA] = buf[gidxA+1];
+	}
+
+	buf[199] = new_value;
+}
+
+int flag_FallingEdge = 0;
+int flag_saving = 0;
+
+int file_name_index = 0;
+
+//FIL log_file;
+int log_file_opened = 0;
+
+static float ADC_OLD_Value;
+static float P_k1_k1;
+
+static float Q = 0.0001;//Q: Regulation noise, Q increases, dynamic response becomes faster, and convergence stability becomes worse
+//static float Q = 0.0005;//Q: Regulation noise, Q increases, dynamic response becomes faster, and convergence stability becomes worse
+static float R = 0.005; //R: Test noise, R increases, dynamic response becomes slower, convergence stability becomes better
+//static float R = 0.2;
+static float Kg = 0;
+static float P_k_k1 = 0.5;
+static float kalman_adc_old=0;
+static int kalman_adc_int = 0;
+
+unsigned long kalman_filter(unsigned long ADC_Value)
+{
+    float x_k1_k1,x_k_k1;
+    //static float ADC_OLD_Value;
+    float Z_k;
+
+
+    float kalman_adc;
+
+    Z_k = ADC_Value;
+    x_k1_k1 = kalman_adc_old;
+
+    x_k_k1 = x_k1_k1;
+    P_k_k1 = P_k1_k1 + Q;
+
+    Kg = P_k_k1/(P_k_k1 + R);
+
+    kalman_adc = x_k_k1 + Kg * (Z_k - kalman_adc_old);
+    P_k1_k1 = (1 - Kg)*P_k_k1;
+    P_k_k1 = P_k1_k1;
+
+    ADC_OLD_Value = ADC_Value;
+    kalman_adc_old = kalman_adc;
+    kalman_adc_int = (int)kalman_adc;
+    return kalman_adc;
+}
+
+int getSimplifiedSlope(int32_t *buf)
+{
+	int32_t avg1 = (buf[0] + buf[1] + buf[2] + buf[3] + buf[4]) / 5;
+	int32_t avg2 = (buf[5] + buf[6] + buf[7] + buf[8] + buf[9]) / 5;
+
+	if((avg1 - avg2) > 1000)
+	{
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+int max = 0;
+int min = 5000;
+
+int gmaxA = 0;
+int gminA = 0;
+int midlineA = 0;
+int dripOff = 0;
+
+int32_t GetMidLine(int32_t *gbuff, uint32_t sz)
+{
+	int lidxA = 0;
+
+	for(lidxA = 1; lidxA<(sz - 1 ); lidxA++)
+	{
+		if(gbuff[lidxA] > max)
+		{
+			max = gbuff[lidxA];
+		}
+	}
+
+	for(lidxA = 1; lidxA<(sz - 1 ); lidxA++)
+	{
+		if(gbuff[lidxA] < min)
+		{
+			min = gbuff[lidxA];
+		}
+	}
+
+	return (((max - min)/2) + min);
+}
+
+
 
 
 /**
@@ -209,7 +359,41 @@ void myprintf(const char *fmt, ...) {
 
 }
 
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+	if(huart == &huart3)
+	{
+		if(uart3_raw[0] == 'a')
+		{
+			rx_flagA = 1;
+			//HAL_UART_Receive_IT(&huart2, uart2_raw, 1);
+		}
 
+		if(uart3_raw[0] == 'b')
+		{
+			rx_flagB = 1;
+			//HAL_UART_Receive_IT(&huart2, uart2_raw, 1);
+		}
+
+		rx_flagG = 1;
+	}
+	HAL_UART_Receive_IT(&huart3, uart3_raw, 1);
+}
+
+void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
+{
+	int loop_A = 0;
+	while(1)
+	{
+		HAL_Delay(1000);
+		loop_A++;
+
+		if(loop_A > 10)
+		{
+			break;
+		}
+	}
+}
 
 /**
   * @brief  Main program
@@ -299,6 +483,8 @@ int main(void)
 
   MX_USART3_UART_Init();
 
+  HAL_UART_Receive_IT(&huart3, uart3_raw, 1);
+
   myprintf("Starting ... \r\n");
   HAL_Delay(500);
   myprintf("After Delay ... \r\n");
@@ -334,6 +520,12 @@ int main(void)
     	myprintf("ADC[1] = %d  ADC[2] = %d \r\n", aADCxConvertedValues[0], aADCyConvertedValues[0]);
     	myprintf("Rate : %d\r\n", convrate);
     	convrate = 0;
+
+    	if(rx_flagA == 1)
+    	{
+    		myprintf("rx_flagA Received\r\n");
+    		rx_flagA = 0;
+    	}
     }
 
 //    if(ubADCDualConversionComplete == SET)

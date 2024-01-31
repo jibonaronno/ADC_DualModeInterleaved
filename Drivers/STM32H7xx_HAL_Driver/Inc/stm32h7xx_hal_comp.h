@@ -240,8 +240,6 @@ typedef  void (*pCOMP_CallbackTypeDef)(COMP_HandleTypeDef *hcomp); /*!< pointer 
   */
 
 
-
-
 /** @defgroup COMP_OutputLevel COMP Output Level
   * @{
   */ 

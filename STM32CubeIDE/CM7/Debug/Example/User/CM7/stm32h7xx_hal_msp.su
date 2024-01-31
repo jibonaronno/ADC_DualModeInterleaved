@@ -1,0 +1,8 @@
+C:/Users/jibon/STM32CubeIDE/workspace_1.13.1/ADC_DualModeInterleaved/CM7/Src/stm32h7xx_hal_msp.c:45:13:Error_Handler	4	static,ignoring_inline_asm
+C:/Users/jibon/STM32CubeIDE/workspace_1.13.1/ADC_DualModeInterleaved/CM7/Src/stm32h7xx_hal_msp.c:62:6:HAL_UART_MspInit	240	static
+C:/Users/jibon/STM32CubeIDE/workspace_1.13.1/ADC_DualModeInterleaved/CM7/Src/stm32h7xx_hal_msp.c:116:6:HAL_ADC_MspInit	48	static
+C:/Users/jibon/STM32CubeIDE/workspace_1.13.1/ADC_DualModeInterleaved/CM7/Src/stm32h7xx_hal_msp.c:198:6:HAL_ADC_MspDeInit	16	static
+C:/Users/jibon/STM32CubeIDE/workspace_1.13.1/ADC_DualModeInterleaved/CM7/Src/stm32h7xx_hal_msp.c:229:6:HAL_TIM_Base_MspInit	24	static
+C:/Users/jibon/STM32CubeIDE/workspace_1.13.1/ADC_DualModeInterleaved/CM7/Src/stm32h7xx_hal_msp.c:257:6:HAL_TIM_Base_MspDeInit	16	static
+C:/Users/jibon/STM32CubeIDE/workspace_1.13.1/ADC_DualModeInterleaved/CM7/Src/stm32h7xx_hal_msp.c:290:6:HAL_DAC_MspInit	48	static
+C:/Users/jibon/STM32CubeIDE/workspace_1.13.1/ADC_DualModeInterleaved/CM7/Src/stm32h7xx_hal_msp.c:365:6:HAL_DAC_MspDeInit	16	static
