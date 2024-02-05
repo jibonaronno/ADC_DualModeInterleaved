@@ -112,6 +112,13 @@
 
 /* #endif */ /* ADC_TRIGGER_FROM_TIMER */
 
+#define TIMz                            TIM4    /* Caution: Timer instance must be on APB1 (clocked by PCLK1) due to frequency computation in function "TIM_Config()" */
+#define TIMz_CLK_ENABLE()               __HAL_RCC_TIM4_CLK_ENABLE()
+
+#define TIMz_FORCE_RESET()              __HAL_RCC_TIM4_FORCE_RESET()
+#define TIMz_RELEASE_RESET()            __HAL_RCC_TIM4_RELEASE_RESET()
+#define TIMz_IRQ_ENABLE()
+
 
 #if defined(WAVEFORM_VOLTAGE_GENERATION_FOR_TEST)
 /* ## Definition of DAC related resources for waveform voltage generation test ## */

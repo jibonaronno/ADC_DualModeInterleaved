@@ -52,6 +52,8 @@
 #define TIMER_PRESCALER_MAX_VALUE      (0xFFFF-1)           /* Timer prescaler maximum value (0xFFFF for a timer 16 bits) */
 #endif /* ADC_TRIGGER_FROM_TIMER */
 
+#define TIMER4_FREQUENCY                ((uint32_t) 32000)    /* Timer frequency (unit: Hz). With a timer 16 bits and time base freq min 1Hz, range is min=1Hz, max=32kHz. */
+
 #if defined(WAVEFORM_VOLTAGE_GENERATION_FOR_TEST)
 /* Timer for DAC trigger parameters */
 #define TIMER_FOR_WAVEFORM_TEST_FREQUENCY                ((uint32_t)  500)    /* Timer for DAC trigger to send each sample of the waveform: Timer frequency (unit: Hz). With a timer 16 bits and time base freq min 1Hz, range is min=1Hz, max=32kHz. */
@@ -102,6 +104,7 @@ ADC_HandleTypeDef    AdcHandle_master;
 ADC_HandleTypeDef    AdcHandle_slave;
 /* TIM handler declaration */
 TIM_HandleTypeDef    TimHandle;
+TIM_HandleTypeDef    Tim4Handle;
 
 #if defined(WAVEFORM_VOLTAGE_GENERATION_FOR_TEST)
 /* DAC handler declaration */
@@ -134,13 +137,15 @@ static void ADC_Config(void);
 static void CPU_CACHE_Enable(void);
 #if defined(ADC_TRIGGER_FROM_TIMER)
 static void TIM_Config(void);
+static void TIM4_Config(void);
 #endif /* ADC_TRIGGER_FROM_TIMER */
 #if defined(WAVEFORM_VOLTAGE_GENERATION_FOR_TEST)
 static void WaveformVoltageGenerationForTest(void);
 #endif /* WAVEFORM_VOLTAGE_GENERATION_FOR_TEST */
 /* Private functions ---------------------------------------------------------*/
 
-
+uint16_t adraw[2];
+uint8_t uart2_raw[10];
 UART_HandleTypeDef huart3;
 uint8_t uart3_raw[10];
 volatile int rx_flagA = 0;
@@ -272,6 +277,12 @@ int gminA = 0;
 int midlineA = 0;
 int dripOff = 0;
 
+uint32_t crate = 0;
+
+uint32_t __t2_cntr = 0;
+volatile uint32_t __dripA = 0;
+uint32_t flag_saving_interval = 0;
+
 int32_t GetMidLine(int32_t *gbuff, uint32_t sz)
 {
 	int lidxA = 0;
@@ -395,6 +406,36 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 	}
 }
 
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+	if(htim == &Tim4Handle)
+	{
+		if(__t2_cntr < 3)
+		{
+			__t2_cntr++;
+		}
+		else
+		{
+			__t2_cntr = 0;
+		}
+
+		if(__dripA > 0)
+		{
+			__dripA++;
+
+			//HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_SET);
+
+			if(__dripA > 16) // 500uS
+			{
+				flag_FallingEdge = 0;
+				__dripA = 0;
+				//HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
+				//HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_0);
+			}
+		}
+	}
+}
+
 /**
   * @brief  Main program
   * @param  None
@@ -403,6 +444,8 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 int main(void)
 {
   int32_t timeout;
+
+  int lidxA = 0;
 
   /* System Init, System clock, voltage scaling and L1-Cache configuration are done by CPU1 (Cortex-M7)
      in the meantime Domain D2 is put in STOP mode(Cortex-M4 in deep-sleep)
@@ -442,7 +485,7 @@ int main(void)
   BSP_LED_Init(LED3);
   BSP_LED_Init(LED1);
 
-  BSP_LED_On(LED1);
+  //BSP_LED_On(LED1);
 
 
   /* Configure the ADCx and ADCy peripherals */
@@ -453,6 +496,8 @@ int main(void)
   TIM_Config();
 #endif
 
+  TIM4_Config();
+
   /*## Enable peripherals ####################################################*/
 #if defined(ADC_TRIGGER_FROM_TIMER)
   /* Timer enable */
@@ -462,6 +507,12 @@ int main(void)
     Error_Handler();
   }
 #endif /* ADC_TRIGGER_FROM_TIMER */
+
+if (HAL_TIM_Base_Start_IT(&Tim4Handle) != HAL_OK)
+{
+  /* Counter Enable Error */
+  Error_Handler();
+}
 
 #if defined(WAVEFORM_VOLTAGE_GENERATION_FOR_TEST)
   /* Generate a periodic signal on a spare DAC channel */
@@ -504,28 +555,50 @@ int main(void)
 
     /* ADC conversion buffer complete variable is updated into ADC conversions*/
     /* complete callback.                                                     */
-    if (ubADCDualConversionComplete == RESET)
-    {
-      BSP_LED_Off(LED1);
-    }
-    else
-    {
-      BSP_LED_On(LED1);
-    }
+//    if (ubADCDualConversionComplete == RESET)
+//    {
+//      ; //BSP_LED_Off(LED1);
+//    }
+//    else
+//    {
+//      ; //BSP_LED_On(LED1);
+//    }
 
-    if(HAL_GetTick() > (aShot + 1000))
+    if(HAL_GetTick() > (aShot + 500))
     {
     	aShot  = HAL_GetTick();
 
-    	myprintf("ADC[1] = %d  ADC[2] = %d \r\n", aADCxConvertedValues[0], aADCyConvertedValues[0]);
-    	myprintf("Rate : %d\r\n", convrate);
+//    	myprintf("ADC[1] = %d  ADC[2] = %d \r\n", aADCxConvertedValues[0], aADCyConvertedValues[0]);
+//    	myprintf("Rate : %d\r\n", convrate);
     	convrate = 0;
 
     	if(rx_flagA == 1)
     	{
-    		myprintf("rx_flagA Received\r\n");
-    		rx_flagA = 0;
+    		if(adcConversionComplete == 1)
+			{
+			  adcConversionComplete = 0;
+			  for(lidxA=0;lidxA<200;lidxA++)
+			  {
+				  //myprintf("A0:%d, A1:%d\n", signal_buf[lidxA], sawtooth_buf[lidxA]);
+				  if(signal_buffer_in_queue == 2)
+				  {
+					  //myprintf("A0:%d\n", signal_buf1[lidxA]);
+					  myprintf("%d,%d,%d,%d,%d\r\n", signal_buf1[lidxA], sawtooth_buf1[lidxA], kalman_buf1[lidxA], peaks_buff1[lidxA], midlineA); //GetMidLine(kalman_buf1, 200));
+				  }
+				  else
+				  {
+					  //myprintf("A0:%d\n", signal_buf2[lidxA]);
+					  myprintf("%d,%d,%d,%d,%d\r\n", signal_buf2[lidxA], sawtooth_buf2[lidxA], kalman_buf2[lidxA], peaks_buff2[lidxA], midlineA); // GetMidLine(kalman_buf2, 200));
+				  }
+			  }
+			}
+			HAL_Delay(2500);
+			gidxB = 0; // Fresh Copy of ADC
+			rx_flagA = 0;
+			rx_flagB = 0;
     	}
+
+    	//__dripA = 1;
     }
 
 //    if(ubADCDualConversionComplete == SET)
@@ -768,6 +841,82 @@ static void ADC_Config(void)
 
 }
 
+/**
+  * @brief  TIM configuration
+  * @param  None
+  * @retval None
+  */
+static void TIM4_Config(void)
+{
+	TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef master_timer_config;
+  RCC_ClkInitTypeDef clk_init_struct = {0};       /* Temporary variable to retrieve RCC clock configuration */
+  uint32_t latency;                               /* Temporary variable to retrieve Flash Latency */
+
+  uint32_t timer_clock_frequency = 0;             /* Timer clock frequency */
+  uint32_t timer_prescaler = 0;                   /* Time base prescaler to have timebase aligned on minimum frequency possible */
+
+  /* Configuration of timer as time base:                                     */
+  /* Caution: Computation of frequency is done for a timer instance on APB1   */
+  /*          (clocked by PCLK1)                                              */
+  /* Timer frequency is configured from the following constants:              */
+  /* - TIMER_FREQUENCY: timer frequency (unit: Hz).                           */
+  /* - TIMER_FREQUENCY_RANGE_MIN: timer minimum frequency possible            */
+  /*   (unit: Hz).                                                            */
+  /* Note: Refer to comments at these literals definition for more details.   */
+
+  /* Retrieve timer clock source frequency */
+  HAL_RCC_GetClockConfig(&clk_init_struct, &latency);
+  /* If APB1 prescaler is different of 1, timers have a factor x2 on their    */
+  /* clock source.                                                            */
+  if (clk_init_struct.APB1CLKDivider == RCC_HCLK_DIV1)
+  {
+    timer_clock_frequency = HAL_RCC_GetPCLK1Freq();
+  }
+  else
+  {
+    timer_clock_frequency = HAL_RCC_GetPCLK1Freq() *2;
+  }
+
+  /* Timer prescaler calculation */
+  /* (computation for timer 16 bits, additional + 1 to round the prescaler up) */
+  timer_prescaler = (timer_clock_frequency / (TIMER_PRESCALER_MAX_VALUE * TIMER_FREQUENCY_RANGE_MIN)) +1;
+
+  /* Set timer instance */
+  Tim4Handle.Instance = TIM4;
+
+  /* Configure timer parameters */
+  Tim4Handle.Init.Period            = ((timer_clock_frequency / (timer_prescaler * TIMER4_FREQUENCY)) - 1);
+  Tim4Handle.Init.Prescaler         = (timer_prescaler - 1);
+  Tim4Handle.Init.ClockDivision     = TIM_CLOCKDIVISION_DIV1;
+  Tim4Handle.Init.CounterMode       = TIM_COUNTERMODE_UP;
+  Tim4Handle.Init.RepetitionCounter = 0x0;
+  Tim4Handle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+
+  if (HAL_TIM_Base_Init(&Tim4Handle) != HAL_OK)
+  {
+    /* Timer initialization Error */
+    Error_Handler();
+  }
+
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+	if (HAL_TIM_ConfigClockSource(&Tim4Handle, &sClockSourceConfig) != HAL_OK)
+	{
+	  Error_Handler();
+	}
+
+  /* Timer TRGO selection */
+  //master_timer_config.MasterOutputTrigger = TIM_TRGO_UPDATE;
+  //master_timer_config.MasterOutputTrigger2 = TIM_TRGO2_RESET;
+  master_timer_config.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+
+  if (HAL_TIMEx_MasterConfigSynchronization(&Tim4Handle, &master_timer_config) != HAL_OK)
+  {
+    /* Timer TRGO selection Error */
+    Error_Handler();
+  }
+}
+
 #if defined(ADC_TRIGGER_FROM_TIMER)
 /**
   * @brief  TIM configuration
@@ -989,6 +1138,129 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *AdcHandle)
     aADCyConvertedValues[tmp_index] = (uint16_t) COMPUTATION_DUALMODEINTERLEAVED_ADCSLAVE_RESULT(aADCDualConvertedValues[tmp_index]);
   }
 #endif /* ADC_TRIGGER_FROM_TIMER */
+
+  adcConversionComplete = 1;
+
+  for (tmp_index = 0; tmp_index < ADCCONVERTEDVALUES_BUFFER_SIZE; tmp_index++)
+  {
+	  ad1 = aADCxConvertedValues[tmp_index];
+	  ad2 = aADCyConvertedValues[tmp_index];
+
+	  	if(rx_flagA == 0)
+	  	{
+	  		if(gidxB == 200)
+	  		{
+	  			if(signal_buffer_in_queue == 1)
+	  			{
+	  				signal_buffer_in_queue = 2;
+	  			}
+	  			else
+	  			{
+	  				signal_buffer_in_queue = 1;
+	  			}
+	  			gidxB = 0;
+	  		}
+
+	  		if(gidxB > 5)
+	  		{
+	  			if(gmaxA < kalman_buf1[gidxB])
+	  			{
+	  				gmaxA = kalman_buf1[gidxB];
+	  			}
+
+	  			if(gminA > kalman_buf1[gidxB])
+	  			{
+	  				gminA = kalman_buf1[gidxB];
+	  			}
+	  		}
+
+	  		if(gidxB == 195)
+	  		{
+	  			midlineA = (((gmaxA - gminA)/2) + gminA);
+	  		}
+
+	  		if(signal_buffer_in_queue == 1)
+	  		{
+	  			signal_buf1[gidxB] = ad1;
+	  			sawtooth_buf1[gidxB] = ad2;
+	  			kalman_buf1[gidxB] = kalman_filter(signal_buf1[gidxB]);
+
+	  			if(gidxB==0)
+	  			{
+	  				gminA = kalman_buf1[0];
+	  				gmaxA = kalman_buf1[0];
+	  			}
+
+	  			if((gidxB >= 5) && (gidxB < 190))
+	  			{
+
+	  				if(FindPeak(&kalman_buf1[gidxB-3]) && (kalman_buf1[gidxB-3] > midlineA))
+	  				{
+	  					if(dripOff == 0)
+	  					{
+	  						peaks_buff1[gidxB] = 2000;
+	  						dripOff = 20;
+	  						relative_sawtooth_voltage = (3300000 / 4096) * sawtooth_buf1[gidxB-3]; // sawtooth_buf1[gidxB-3]; //
+	  					}
+	  					else
+	  					{
+	  						peaks_buff1[gidxB] = 500;
+	  					}
+	  				}
+	  				else
+	  				{
+	  					peaks_buff1[gidxB] = 500;
+	  				}
+	  			}
+	  			else
+	  			{
+	  				peaks_buff1[gidxB] = 500;
+	  			}
+	  		}
+	  		else
+	  		{
+	  			signal_buf2[gidxB] = ad1;
+	  			sawtooth_buf2[gidxB] = ad2;
+	  			kalman_buf2[gidxB] = kalman_filter(signal_buf2[gidxB]);
+
+	  			if(gidxB==0)
+	  			{
+	  				gminA = kalman_buf2[0];
+	  				gmaxA = kalman_buf2[0];
+	  			}
+
+	  			if((gidxB >= 5) && (gidxB < 190))
+	  			{
+	  				if(FindPeak(&kalman_buf2[gidxB-3]) && (kalman_buf2[gidxB-3] > midlineA))
+	  				{
+	  					if(dripOff == 0)
+	  					{
+	  						peaks_buff2[gidxB] = 2000;
+	  						relative_sawtooth_voltage = (3300000 / 4096) * sawtooth_buf2[gidxB-3]; // sawtooth_buf2[gidxB-3]; //
+	  						dripOff = 20;
+	  					}
+	  					else
+	  					{
+	  						peaks_buff2[gidxB] = 500;
+	  					}
+	  				}
+	  				else
+	  				{
+	  					peaks_buff2[gidxB] = 500;
+	  				}
+	  			}
+	  			else
+	  			{
+	  				peaks_buff2[gidxB] = 500;
+	  			}
+	  		}
+	  		gidxB++;
+	  		if(dripOff > 0)
+	  		{
+	  			dripOff--;
+	  		}
+	  	}
+  }
 
   /* Set variable to report DMA transfer status to main program */
   ubADCDualConversionComplete = SET;

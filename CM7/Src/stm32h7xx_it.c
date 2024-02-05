@@ -34,6 +34,8 @@
 /* Private variables ---------------------------------------------------------*/
 extern ADC_HandleTypeDef    AdcHandle_master;
 extern ADC_HandleTypeDef    AdcHandle_slave;
+extern UART_HandleTypeDef huart3;
+extern TIM_HandleTypeDef    Tim4Handle;
 
 #if defined(WAVEFORM_VOLTAGE_GENERATION_FOR_TEST)
 extern DAC_HandleTypeDef    DacForWaveformTestHandle;
@@ -182,10 +184,24 @@ void USART3_IRQHandler(void)
   /* USER CODE BEGIN USART3_IRQn 0 */
 
   /* USER CODE END USART3_IRQn 0 */
-  ////HAL_UART_IRQHandler(&huart3);
+  HAL_UART_IRQHandler(&huart3);
   /* USER CODE BEGIN USART3_IRQn 1 */
 
   /* USER CODE END USART3_IRQn 1 */
+}
+
+/**
+  * @brief This function handles TIM4 global interrupt.
+  */
+void TIM4_IRQHandler(void)
+{
+  /* USER CODE BEGIN TIM4_IRQn 0 */
+
+  /* USER CODE END TIM4_IRQn 0 */
+  HAL_TIM_IRQHandler(&Tim4Handle);
+  /* USER CODE BEGIN TIM4_IRQn 1 */
+
+  /* USER CODE END TIM4_IRQn 1 */
 }
 
 /**

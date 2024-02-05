@@ -233,6 +233,16 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *htim)
   {
     TIMx_CLK_ENABLE();
   }
+
+  if(htim->Instance == TIM4)
+  {
+	  // TIMz_CLK_ENABLE();
+	  __HAL_RCC_TIM4_CLK_ENABLE();
+	  /* TIM4 interrupt Init */
+	  HAL_NVIC_SetPriority(TIM4_IRQn, 0, 0);
+	  HAL_NVIC_EnableIRQ(TIM4_IRQn);
+  }
+
 #if defined WAVEFORM_VOLTAGE_GENERATION_FOR_TEST
   else if (htim->Instance == TIMy)
   {
