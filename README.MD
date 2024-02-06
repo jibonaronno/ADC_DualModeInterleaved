@@ -7,5 +7,7 @@ GPIO Pins PA6 (Signal) and PA7 (Sawtooth) are configured for analog inputs.
 
 ### main.h
 ADCx is ADC1 
-```C #define ADCx_CHANNELa                   ADC_CHANNEL_3 // was 18 PA4 , Now PA6 ```
+```C
+#define ADCx_CHANNELa                   ADC_CHANNEL_3 // was 18 PA4 , Now PA6 
+```
 
