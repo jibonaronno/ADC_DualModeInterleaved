@@ -169,15 +169,17 @@ volatile uint32_t conv_rate = 0;
 uint32_t ad1 = 0;
 uint32_t ad2 = 0;
 
-int32_t sawtooth_buf1[200];
-int32_t sawtooth_buf2[200];
-int32_t signal_buf[200];
-int32_t signal_buf1[200];
-int32_t signal_buf2[200];
-int32_t kalman_buf1[200];
-int32_t kalman_buf2[200];
-int32_t peaks_buff1[200];
-int32_t peaks_buff2[200];
+#define BUFSIZE		1000
+
+int32_t sawtooth_buf1[BUFSIZE];
+int32_t sawtooth_buf2[BUFSIZE];
+int32_t signal_buf[BUFSIZE];
+int32_t signal_buf1[BUFSIZE];
+int32_t signal_buf2[BUFSIZE];
+int32_t kalman_buf1[BUFSIZE];
+int32_t kalman_buf2[BUFSIZE];
+int32_t peaks_buff1[BUFSIZE];
+int32_t peaks_buff2[BUFSIZE];
 volatile int signal_buffer_in_queue = 1;
 volatile int gidxB = 0;
 volatile int gidxA = 0;
@@ -577,7 +579,7 @@ if (HAL_TIM_Base_Start_IT(&Tim4Handle) != HAL_OK)
     		if(adcConversionComplete == 1)
 			{
 			  adcConversionComplete = 0;
-			  for(lidxA=0;lidxA<200;lidxA++)
+			  for(lidxA=0;lidxA<BUFSIZE;lidxA++)
 			  {
 				  //myprintf("A0:%d, A1:%d\n", signal_buf[lidxA], sawtooth_buf[lidxA]);
 				  if(signal_buffer_in_queue == 2)
@@ -1148,7 +1150,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *AdcHandle)
 
 	  	if(rx_flagA == 0)
 	  	{
-	  		if(gidxB == 200)
+	  		if(gidxB == BUFSIZE)
 	  		{
 	  			if(signal_buffer_in_queue == 1)
 	  			{
@@ -1174,7 +1176,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *AdcHandle)
 	  			}
 	  		}
 
-	  		if(gidxB == 195)
+	  		if(gidxB == (BUFSIZE - 5))
 	  		{
 	  			midlineA = (((gmaxA - gminA)/2) + gminA);
 	  		}
@@ -1191,7 +1193,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *AdcHandle)
 	  				gmaxA = kalman_buf1[0];
 	  			}
 
-	  			if((gidxB >= 5) && (gidxB < 190))
+	  			if((gidxB >= 5) && (gidxB < (BUFSIZE - 10)))
 	  			{
 
 	  				if(FindPeak(&kalman_buf1[gidxB-3]) && (kalman_buf1[gidxB-3] > midlineA))
@@ -1229,7 +1231,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *AdcHandle)
 	  				gmaxA = kalman_buf2[0];
 	  			}
 
-	  			if((gidxB >= 5) && (gidxB < 190))
+	  			if((gidxB >= 5) && (gidxB < (BUFSIZE - 10)))
 	  			{
 	  				if(FindPeak(&kalman_buf2[gidxB-3]) && (kalman_buf2[gidxB-3] > midlineA))
 	  				{
