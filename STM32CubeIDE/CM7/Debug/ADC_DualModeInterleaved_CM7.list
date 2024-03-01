@@ -17,9 +17,9 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, ALLOC, LOAD, DATA
   6 .data         0000007c  24000000  0800fb8c  00020000  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  7 .bss          00001ec4  24000080  0800fc08  00020080  2**5
+  7 .bss          00002504  24000080  0800fc08  00020080  2**5
                   ALLOC
-  8 ._user_heap_stack 00000604  24001f44  0800fc08  00021f44  2**0
+  8 ._user_heap_stack 00000604  24002584  0800fc08  00022584  2**0
                   ALLOC
   9 .ARM.attributes 0000002e  00000000  00000000  0002007c  2**0
                   CONTENTS, READONLY
@@ -33,15 +33,15 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  14 .debug_rnglists 00001274  00000000  00000000  000441b0  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_macro  0003cfc8  00000000  00000000  00045424  2**0
+ 15 .debug_macro  0003cfcf  00000000  00000000  00045424  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_line   0001f5c2  00000000  00000000  000823ec  2**0
+ 16 .debug_line   0001f5c2  00000000  00000000  000823f3  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_str    0019972f  00000000  00000000  000a19ae  2**0
+ 17 .debug_str    0019973b  00000000  00000000  000a19b5  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_frame  00006b70  00000000  00000000  0023b0e0  2**2
+ 18 .debug_frame  00006b70  00000000  00000000  0023b0f0  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .debug_line_str 0000008c  00000000  00000000  00241c50  2**0
+ 19 .debug_line_str 0000008c  00000000  00000000  00241c60  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -33894,14 +33894,14 @@ unsigned long kalman_filter(unsigned long ADC_Value)
  800db24:	f85d 7b04 	ldr.w	r7, [sp], #4
  800db28:	4770      	bx	lr
  800db2a:	bf00      	nop
- 800db2c:	24001c84 	.word	0x24001c84
- 800db30:	24001c7c 	.word	0x24001c7c
+ 800db2c:	240022c4 	.word	0x240022c4
+ 800db30:	240022bc 	.word	0x240022bc
  800db34:	24000020 	.word	0x24000020
  800db38:	24000028 	.word	0x24000028
  800db3c:	24000024 	.word	0x24000024
- 800db40:	24001c80 	.word	0x24001c80
- 800db44:	24001c78 	.word	0x24001c78
- 800db48:	24001c88 	.word	0x24001c88
+ 800db40:	240022c0 	.word	0x240022c0
+ 800db44:	240022b8 	.word	0x240022b8
+ 800db48:	240022c8 	.word	0x240022c8
 
 0800db4c <MX_USART3_UART_Init>:
   * @brief USART3 Initialization Function
@@ -34055,7 +34055,7 @@ void myprintf(const char *fmt, ...) {
  800dc22:	b004      	add	sp, #16
  800dc24:	4770      	bx	lr
  800dc26:	bf00      	nop
- 800dc28:	24001ca4 	.word	0x24001ca4
+ 800dc28:	240022e4 	.word	0x240022e4
  800dc2c:	240002ac 	.word	0x240002ac
 
 0800dc30 <HAL_UART_RxCpltCallback>:
@@ -34234,9 +34234,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
  800dd0a:	f85d 7b04 	ldr.w	r7, [sp], #4
  800dd0e:	4770      	bx	lr
  800dd10:	240001b4 	.word	0x240001b4
- 800dd14:	24001c9c 	.word	0x24001c9c
- 800dd18:	24001ca0 	.word	0x24001ca0
- 800dd1c:	24001c74 	.word	0x24001c74
+ 800dd14:	240022dc 	.word	0x240022dc
+ 800dd18:	240022e0 	.word	0x240022e0
+ 800dd1c:	240022b4 	.word	0x240022b4
 
 0800dd20 <main>:
   * @brief  Main program
@@ -34453,7 +34453,7 @@ if (HAL_TIM_Base_Start_IT(&Tim4Handle) != HAL_OK)
  800de14:	4b34      	ldr	r3, [pc, #208]	; (800dee8 <main+0x1c8>)
  800de16:	2200      	movs	r2, #0
  800de18:	601a      	str	r2, [r3, #0]
-			  for(lidxA=0;lidxA<200;lidxA++)
+			  for(lidxA=0;lidxA<BUFSIZE;lidxA++)
  800de1a:	2300      	movs	r3, #0
  800de1c:	603b      	str	r3, [r7, #0]
  800de1e:	e039      	b.n	800de94 <main+0x174>
@@ -34513,12 +34513,12 @@ if (HAL_TIM_Base_Start_IT(&Tim4Handle) != HAL_OK)
  800de86:	4602      	mov	r2, r0
  800de88:	481e      	ldr	r0, [pc, #120]	; (800df04 <main+0x1e4>)
  800de8a:	f7ff feab 	bl	800dbe4 <myprintf>
-			  for(lidxA=0;lidxA<200;lidxA++)
+			  for(lidxA=0;lidxA<BUFSIZE;lidxA++)
  800de8e:	683b      	ldr	r3, [r7, #0]
  800de90:	3301      	adds	r3, #1
  800de92:	603b      	str	r3, [r7, #0]
  800de94:	683b      	ldr	r3, [r7, #0]
- 800de96:	2bc7      	cmp	r3, #199	; 0xc7
+ 800de96:	2bf9      	cmp	r3, #249	; 0xf9
  800de98:	ddc2      	ble.n	800de20 <main+0x100>
 				  }
 			  }
@@ -34555,17 +34555,17 @@ if (HAL_TIM_Base_Start_IT(&Tim4Handle) != HAL_OK)
  800dee4:	2400034c 	.word	0x2400034c
  800dee8:	24000360 	.word	0x24000360
  800deec:	2400001c 	.word	0x2400001c
- 800def0:	240009ac 	.word	0x240009ac
+ 800def0:	24000b3c 	.word	0x24000b3c
  800def4:	2400036c 	.word	0x2400036c
- 800def8:	24000fec 	.word	0x24000fec
- 800defc:	2400162c 	.word	0x2400162c
- 800df00:	24001c94 	.word	0x24001c94
+ 800def8:	2400130c 	.word	0x2400130c
+ 800defc:	24001adc 	.word	0x24001adc
+ 800df00:	240022d4 	.word	0x240022d4
  800df04:	0800fae8 	.word	0x0800fae8
- 800df08:	24000ccc 	.word	0x24000ccc
- 800df0c:	2400068c 	.word	0x2400068c
- 800df10:	2400130c 	.word	0x2400130c
- 800df14:	2400194c 	.word	0x2400194c
- 800df18:	24001c6c 	.word	0x24001c6c
+ 800df08:	24000f24 	.word	0x24000f24
+ 800df0c:	24000754 	.word	0x24000754
+ 800df10:	240016f4 	.word	0x240016f4
+ 800df14:	24001ec4 	.word	0x24001ec4
+ 800df18:	240022ac 	.word	0x240022ac
  800df1c:	24000350 	.word	0x24000350
 
 0800df20 <SystemClock_Config>:
@@ -35733,10 +35733,10 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *AdcHandle)
  800e58a:	2b00      	cmp	r3, #0
  800e58c:	f040 8181 	bne.w	800e892 <HAL_ADC_ConvCpltCallback+0x3d2>
 	  	{
-	  		if(gidxB == 200)
+	  		if(gidxB == BUFSIZE)
  800e590:	4b6f      	ldr	r3, [pc, #444]	; (800e750 <HAL_ADC_ConvCpltCallback+0x290>)
  800e592:	681b      	ldr	r3, [r3, #0]
- 800e594:	2bc8      	cmp	r3, #200	; 0xc8
+ 800e594:	2bfa      	cmp	r3, #250	; 0xfa
  800e596:	d10d      	bne.n	800e5b4 <HAL_ADC_ConvCpltCallback+0xf4>
 	  		{
 	  			if(signal_buffer_in_queue == 1)
@@ -35809,10 +35809,10 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *AdcHandle)
 	  			}
 	  		}
 
-	  		if(gidxB == 195)
+	  		if(gidxB == (BUFSIZE - 5))
  800e5fc:	4b54      	ldr	r3, [pc, #336]	; (800e750 <HAL_ADC_ConvCpltCallback+0x290>)
  800e5fe:	681b      	ldr	r3, [r3, #0]
- 800e600:	2bc3      	cmp	r3, #195	; 0xc3
+ 800e600:	2bf5      	cmp	r3, #245	; 0xf5
  800e602:	d10e      	bne.n	800e622 <HAL_ADC_ConvCpltCallback+0x162>
 	  		{
 	  			midlineA = (((gmaxA - gminA)/2) + gminA);
@@ -35887,14 +35887,14 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *AdcHandle)
  800e680:	6013      	str	r3, [r2, #0]
 	  			}
 
-	  			if((gidxB >= 5) && (gidxB < 190))
+	  			if((gidxB >= 5) && (gidxB < (BUFSIZE - 10)))
  800e682:	4b33      	ldr	r3, [pc, #204]	; (800e750 <HAL_ADC_ConvCpltCallback+0x290>)
  800e684:	681b      	ldr	r3, [r3, #0]
  800e686:	2b04      	cmp	r3, #4
  800e688:	dd46      	ble.n	800e718 <HAL_ADC_ConvCpltCallback+0x258>
  800e68a:	4b31      	ldr	r3, [pc, #196]	; (800e750 <HAL_ADC_ConvCpltCallback+0x290>)
  800e68c:	681b      	ldr	r3, [r3, #0]
- 800e68e:	2bbd      	cmp	r3, #189	; 0xbd
+ 800e68e:	2bef      	cmp	r3, #239	; 0xef
  800e690:	dc42      	bgt.n	800e718 <HAL_ADC_ConvCpltCallback+0x258>
 	  			{
 
@@ -35994,17 +35994,17 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *AdcHandle)
  800e744:	24000364 	.word	0x24000364
  800e748:	24000368 	.word	0x24000368
  800e74c:	2400034c 	.word	0x2400034c
- 800e750:	24001c6c 	.word	0x24001c6c
+ 800e750:	240022ac 	.word	0x240022ac
  800e754:	2400001c 	.word	0x2400001c
- 800e758:	24000fec 	.word	0x24000fec
- 800e75c:	24001c8c 	.word	0x24001c8c
- 800e760:	24001c90 	.word	0x24001c90
- 800e764:	24001c94 	.word	0x24001c94
- 800e768:	240009ac 	.word	0x240009ac
+ 800e758:	2400130c 	.word	0x2400130c
+ 800e75c:	240022cc 	.word	0x240022cc
+ 800e760:	240022d0 	.word	0x240022d0
+ 800e764:	240022d4 	.word	0x240022d4
+ 800e768:	24000b3c 	.word	0x24000b3c
  800e76c:	2400036c 	.word	0x2400036c
- 800e770:	24001c98 	.word	0x24001c98
- 800e774:	2400162c 	.word	0x2400162c
- 800e778:	24001c70 	.word	0x24001c70
+ 800e770:	240022d8 	.word	0x240022d8
+ 800e774:	24001adc 	.word	0x24001adc
+ 800e778:	240022b0 	.word	0x240022b0
 	  			}
 	  		}
 	  		else
@@ -36057,14 +36057,14 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *AdcHandle)
  800e7d0:	6013      	str	r3, [r2, #0]
 	  			}
 
-	  			if((gidxB >= 5) && (gidxB < 190))
+	  			if((gidxB >= 5) && (gidxB < (BUFSIZE - 10)))
  800e7d2:	4b38      	ldr	r3, [pc, #224]	; (800e8b4 <HAL_ADC_ConvCpltCallback+0x3f4>)
  800e7d4:	681b      	ldr	r3, [r3, #0]
  800e7d6:	2b04      	cmp	r3, #4
  800e7d8:	dd46      	ble.n	800e868 <HAL_ADC_ConvCpltCallback+0x3a8>
  800e7da:	4b36      	ldr	r3, [pc, #216]	; (800e8b4 <HAL_ADC_ConvCpltCallback+0x3f4>)
  800e7dc:	681b      	ldr	r3, [r3, #0]
- 800e7de:	2bbd      	cmp	r3, #189	; 0xbd
+ 800e7de:	2bef      	cmp	r3, #239	; 0xef
  800e7e0:	dc42      	bgt.n	800e868 <HAL_ADC_ConvCpltCallback+0x3a8>
 	  			{
 	  				if(FindPeak(&kalman_buf2[gidxB-3]) && (kalman_buf2[gidxB-3] > midlineA))
@@ -36195,17 +36195,17 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *AdcHandle)
  800e8ac:	bd80      	pop	{r7, pc}
  800e8ae:	bf00      	nop
  800e8b0:	24000364 	.word	0x24000364
- 800e8b4:	24001c6c 	.word	0x24001c6c
- 800e8b8:	24000ccc 	.word	0x24000ccc
+ 800e8b4:	240022ac 	.word	0x240022ac
+ 800e8b8:	24000f24 	.word	0x24000f24
  800e8bc:	24000368 	.word	0x24000368
- 800e8c0:	2400068c 	.word	0x2400068c
- 800e8c4:	2400130c 	.word	0x2400130c
- 800e8c8:	24001c90 	.word	0x24001c90
- 800e8cc:	24001c8c 	.word	0x24001c8c
- 800e8d0:	24001c94 	.word	0x24001c94
- 800e8d4:	24001c98 	.word	0x24001c98
- 800e8d8:	2400194c 	.word	0x2400194c
- 800e8dc:	24001c70 	.word	0x24001c70
+ 800e8c0:	24000754 	.word	0x24000754
+ 800e8c4:	240016f4 	.word	0x240016f4
+ 800e8c8:	240022d0 	.word	0x240022d0
+ 800e8cc:	240022cc 	.word	0x240022cc
+ 800e8d0:	240022d4 	.word	0x240022d4
+ 800e8d4:	240022d8 	.word	0x240022d8
+ 800e8d8:	24001ec4 	.word	0x24001ec4
+ 800e8dc:	240022b0 	.word	0x240022b0
  800e8e0:	240002a8 	.word	0x240002a8
 
 0800e8e4 <HAL_ADC_ConvHalfCpltCallback>:
@@ -36909,7 +36909,7 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef *hadc)
  800ecf0:	58024400 	.word	0x58024400
  800ecf4:	40022000 	.word	0x40022000
  800ecf8:	58020000 	.word	0x58020000
- 800ecfc:	24001d08 	.word	0x24001d08
+ 800ecfc:	24002348 	.word	0x24002348
  800ed00:	40020028 	.word	0x40020028
 
 0800ed04 <HAL_ADC_MspDeInit>:
@@ -37238,7 +37238,7 @@ void HAL_DAC_MspInit(DAC_HandleTypeDef *hdac)
  800ef0e:	bd80      	pop	{r7, pc}
  800ef10:	58024400 	.word	0x58024400
  800ef14:	58020000 	.word	0x58020000
- 800ef18:	24001d80 	.word	0x24001d80
+ 800ef18:	240023c0 	.word	0x240023c0
  800ef1c:	40020058 	.word	0x40020058
 
 0800ef20 <HAL_DAC_MspDeInit>:
@@ -37652,8 +37652,8 @@ void *_sbrk(ptrdiff_t incr)
  800f0ce:	bd80      	pop	{r7, pc}
  800f0d0:	24080000 	.word	0x24080000
  800f0d4:	00000400 	.word	0x00000400
- 800f0d8:	24001df8 	.word	0x24001df8
- 800f0dc:	24001f48 	.word	0x24001f48
+ 800f0d8:	24002438 	.word	0x24002438
+ 800f0dc:	24002588 	.word	0x24002588
 
 0800f0e0 <Reset_Handler>:
 
@@ -37744,7 +37744,7 @@ LoopFillZerobss:
   ldr r2, =_sbss
  800f128:	24000080 	.word	0x24000080
   ldr r4, =_ebss
- 800f12c:	24001f44 	.word	0x24001f44
+ 800f12c:	24002584 	.word	0x24002584
 
 0800f130 <ADC3_IRQHandler>:
  * @retval None
@@ -37942,7 +37942,7 @@ Infinite_Loop:
  800f2b6:	e7ca      	b.n	800f24e <_free_r+0x26>
  800f2b8:	b003      	add	sp, #12
  800f2ba:	bd30      	pop	{r4, r5, pc}
- 800f2bc:	24001f3c 	.word	0x24001f3c
+ 800f2bc:	2400257c 	.word	0x2400257c
 
 0800f2c0 <sbrk_aligned>:
  800f2c0:	b570      	push	{r4, r5, r6, lr}
@@ -37970,7 +37970,7 @@ Infinite_Loop:
  800f2f4:	f04f 34ff 	mov.w	r4, #4294967295
  800f2f8:	4620      	mov	r0, r4
  800f2fa:	bd70      	pop	{r4, r5, r6, pc}
- 800f2fc:	24001f40 	.word	0x24001f40
+ 800f2fc:	24002580 	.word	0x24002580
 
 0800f300 <_malloc_r>:
  800f300:	e92d 43f8 	stmdb	sp!, {r3, r4, r5, r6, r7, r8, r9, lr}
@@ -38081,19 +38081,19 @@ Infinite_Loop:
  800f3f6:	605b      	str	r3, [r3, #4]
  800f3f8:	deff      	udf	#255	; 0xff
  800f3fa:	bf00      	nop
- 800f3fc:	24001f3c 	.word	0x24001f3c
+ 800f3fc:	2400257c 	.word	0x2400257c
 
 0800f400 <__malloc_lock>:
  800f400:	4801      	ldr	r0, [pc, #4]	; (800f408 <__malloc_lock+0x8>)
  800f402:	f7ff bf01 	b.w	800f208 <__retarget_lock_acquire_recursive>
  800f406:	bf00      	nop
- 800f408:	24001f38 	.word	0x24001f38
+ 800f408:	24002578 	.word	0x24002578
 
 0800f40c <__malloc_unlock>:
  800f40c:	4801      	ldr	r0, [pc, #4]	; (800f414 <__malloc_unlock+0x8>)
  800f40e:	f7ff befc 	b.w	800f20a <__retarget_lock_release_recursive>
  800f412:	bf00      	nop
- 800f414:	24001f38 	.word	0x24001f38
+ 800f414:	24002578 	.word	0x24002578
 
 0800f418 <__ssputs_r>:
  800f418:	e92d 47f0 	stmdb	sp!, {r4, r5, r6, r7, r8, r9, sl, lr}
@@ -38748,7 +38748,7 @@ Infinite_Loop:
  800fa32:	b103      	cbz	r3, 800fa36 <_sbrk_r+0x1a>
  800fa34:	6023      	str	r3, [r4, #0]
  800fa36:	bd38      	pop	{r3, r4, r5, pc}
- 800fa38:	24001f34 	.word	0x24001f34
+ 800fa38:	24002574 	.word	0x24002574
 
 0800fa3c <_realloc_r>:
  800fa3c:	e92d 41f0 	stmdb	sp!, {r4, r5, r6, r7, r8, lr}

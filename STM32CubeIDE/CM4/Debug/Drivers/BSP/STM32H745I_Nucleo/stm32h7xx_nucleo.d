@@ -1,6 +1,6 @@
 Drivers/BSP/STM32H745I_Nucleo/stm32h7xx_nucleo.o: \
- C:/Users/jibon/STM32CubeIDE/workspace_1.13.1/ADC_DualModeInterleaved/Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo.c \
- C:/Users/jibon/STM32CubeIDE/workspace_1.13.1/ADC_DualModeInterleaved/Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo.h \
+ C:/Users/haque/STM32CubeIDE/workspace_1.13.1/ADC_DualModeInterleaved/Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo.c \
+ C:/Users/haque/STM32CubeIDE/workspace_1.13.1/ADC_DualModeInterleaved/Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo.h \
  ../../../Common/Inc/stm32h7xx_nucleo_conf.h \
  ../../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h \
  ../../../CM4/Inc/stm32h7xx_hal_conf.h \
@@ -96,8 +96,8 @@ Drivers/BSP/STM32H745I_Nucleo/stm32h7xx_nucleo.o: \
  ../../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_ll_usb.h \
  ../../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd_ex.h \
  ../../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_hcd.h \
- C:/Users/jibon/STM32CubeIDE/workspace_1.13.1/ADC_DualModeInterleaved/Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo_errno.h
-C:/Users/jibon/STM32CubeIDE/workspace_1.13.1/ADC_DualModeInterleaved/Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo.h:
+ C:/Users/haque/STM32CubeIDE/workspace_1.13.1/ADC_DualModeInterleaved/Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo_errno.h
+C:/Users/haque/STM32CubeIDE/workspace_1.13.1/ADC_DualModeInterleaved/Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo.h:
 ../../../Common/Inc/stm32h7xx_nucleo_conf.h:
 ../../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:
 ../../../CM4/Inc/stm32h7xx_hal_conf.h:
@@ -193,4 +193,4 @@ C:/Users/jibon/STM32CubeIDE/workspace_1.13.1/ADC_DualModeInterleaved/Drivers/BSP
 ../../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_ll_usb.h:
 ../../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd_ex.h:
 ../../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_hcd.h:
-C:/Users/jibon/STM32CubeIDE/workspace_1.13.1/ADC_DualModeInterleaved/Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo_errno.h:
+C:/Users/haque/STM32CubeIDE/workspace_1.13.1/ADC_DualModeInterleaved/Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo_errno.h:

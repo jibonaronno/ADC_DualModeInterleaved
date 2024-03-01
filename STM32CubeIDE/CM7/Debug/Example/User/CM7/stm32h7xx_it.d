@@ -1,5 +1,5 @@
 Example/User/CM7/stm32h7xx_it.o: \
- C:/Users/jibon/STM32CubeIDE/workspace_1.13.1/ADC_DualModeInterleaved/CM7/Src/stm32h7xx_it.c \
+ C:/Users/haque/STM32CubeIDE/workspace_1.13.1/ADC_DualModeInterleaved/CM7/Src/stm32h7xx_it.c \
  ../../../CM7/Inc/main.h \
  ../../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h \
  ../../../CM7/Inc/stm32h7xx_hal_conf.h \

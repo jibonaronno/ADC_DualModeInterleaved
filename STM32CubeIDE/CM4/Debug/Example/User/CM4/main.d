@@ -1,5 +1,5 @@
 Example/User/CM4/main.o: \
- C:/Users/jibon/STM32CubeIDE/workspace_1.13.1/ADC_DualModeInterleaved/CM4/Src/main.c \
+ C:/Users/haque/STM32CubeIDE/workspace_1.13.1/ADC_DualModeInterleaved/CM4/Src/main.c \
  ../../../CM4/Inc/main.h \
  ../../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h \
  ../../../CM4/Inc/stm32h7xx_hal_conf.h \
