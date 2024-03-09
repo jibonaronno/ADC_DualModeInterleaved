@@ -87,12 +87,12 @@
 #define ADCy_RELEASE_RESET()            __HAL_RCC_ADC12_RELEASE_RESET()
 
 /* Definition of ADCy channels */
-#define ADCy_CHANNELa                   ADC_CHANNEL_7 // was 19 PA5 , Now PA7
+#define ADCy_CHANNELa                   ADC_CHANNEL_19 // was 7 PA7 , Now PA5 ADC2-19
 
 /* Definition of ADCy channels pins */
 #define ADCy_CHANNELa_GPIO_CLK_ENABLE() __HAL_RCC_GPIOA_CLK_ENABLE()
 #define ADCy_CHANNELa_GPIO_PORT         GPIOA
-#define ADCy_CHANNELa_PIN               GPIO_PIN_7
+#define ADCy_CHANNELa_PIN               GPIO_PIN_5
 
 /* Definition of ADCy NVIC resources */
 #define ADCy_IRQn                       ADC_IRQn

@@ -5,9 +5,9 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-C:/Users/jibon/STM32CubeIDE/workspace_1.13.1/ADC_DualModeInterleaved/CM4/Src/main.c \
-C:/Users/jibon/STM32CubeIDE/workspace_1.13.1/ADC_DualModeInterleaved/CM4/Src/stm32h7xx_hal_msp.c \
-C:/Users/jibon/STM32CubeIDE/workspace_1.13.1/ADC_DualModeInterleaved/CM4/Src/stm32h7xx_it.c \
+C:/Users/TK/STM32CubeIDE/workspace_1.13.0/ADC_DualModeInterleaved/CM4/Src/main.c \
+C:/Users/TK/STM32CubeIDE/workspace_1.13.0/ADC_DualModeInterleaved/CM4/Src/stm32h7xx_hal_msp.c \
+C:/Users/TK/STM32CubeIDE/workspace_1.13.0/ADC_DualModeInterleaved/CM4/Src/stm32h7xx_it.c \
 ../Example/User/CM4/syscalls.c \
 ../Example/User/CM4/sysmem.c 
 
@@ -27,11 +27,11 @@ C_DEPS += \
 
 
 # Each subdirectory must supply rules for building sources it contributes
-Example/User/CM4/main.o: C:/Users/jibon/STM32CubeIDE/workspace_1.13.1/ADC_DualModeInterleaved/CM4/Src/main.c Example/User/CM4/subdir.mk
+Example/User/CM4/main.o: C:/Users/TK/STM32CubeIDE/workspace_1.13.0/ADC_DualModeInterleaved/CM4/Src/main.c Example/User/CM4/subdir.mk
 	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32H745xx -DCORE_CM4 -DUSE_HAL_DRIVER -DUSE_STM32H7XX_NUCLEO_144_MB1363 -c -I../../../Common/Inc -I../../../CM4/Inc -I../../../Drivers/CMSIS/Include -I../../../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I../../../Drivers/STM32H7xx_HAL_Driver/Inc -I../../../Drivers/BSP/STM32H7xx_Nucleo -I../../../Utilities/Fonts -I../../../Utilities/CPU -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
-Example/User/CM4/stm32h7xx_hal_msp.o: C:/Users/jibon/STM32CubeIDE/workspace_1.13.1/ADC_DualModeInterleaved/CM4/Src/stm32h7xx_hal_msp.c Example/User/CM4/subdir.mk
+Example/User/CM4/stm32h7xx_hal_msp.o: C:/Users/TK/STM32CubeIDE/workspace_1.13.0/ADC_DualModeInterleaved/CM4/Src/stm32h7xx_hal_msp.c Example/User/CM4/subdir.mk
 	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32H745xx -DCORE_CM4 -DUSE_HAL_DRIVER -DUSE_STM32H7XX_NUCLEO_144_MB1363 -c -I../../../Common/Inc -I../../../CM4/Inc -I../../../Drivers/CMSIS/Include -I../../../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I../../../Drivers/STM32H7xx_HAL_Driver/Inc -I../../../Drivers/BSP/STM32H7xx_Nucleo -I../../../Utilities/Fonts -I../../../Utilities/CPU -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
-Example/User/CM4/stm32h7xx_it.o: C:/Users/jibon/STM32CubeIDE/workspace_1.13.1/ADC_DualModeInterleaved/CM4/Src/stm32h7xx_it.c Example/User/CM4/subdir.mk
+Example/User/CM4/stm32h7xx_it.o: C:/Users/TK/STM32CubeIDE/workspace_1.13.0/ADC_DualModeInterleaved/CM4/Src/stm32h7xx_it.c Example/User/CM4/subdir.mk
 	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32H745xx -DCORE_CM4 -DUSE_HAL_DRIVER -DUSE_STM32H7XX_NUCLEO_144_MB1363 -c -I../../../Common/Inc -I../../../CM4/Inc -I../../../Drivers/CMSIS/Include -I../../../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I../../../Drivers/STM32H7xx_HAL_Driver/Inc -I../../../Drivers/BSP/STM32H7xx_Nucleo -I../../../Utilities/Fonts -I../../../Utilities/CPU -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
 Example/User/CM4/%.o Example/User/CM4/%.su Example/User/CM4/%.cyclo: ../Example/User/CM4/%.c Example/User/CM4/subdir.mk
 	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32H745xx -DCORE_CM4 -DUSE_HAL_DRIVER -DUSE_STM32H7XX_NUCLEO_144_MB1363 -c -I../../../Common/Inc -I../../../CM4/Inc -I../../../Drivers/CMSIS/Include -I../../../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I../../../Drivers/STM32H7xx_HAL_Driver/Inc -I../../../Drivers/BSP/STM32H7xx_Nucleo -I../../../Utilities/Fonts -I../../../Utilities/CPU -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"

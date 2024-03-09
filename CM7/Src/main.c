@@ -169,29 +169,48 @@ volatile uint32_t conv_rate = 0;
 uint32_t ad1 = 0;
 uint32_t ad2 = 0;
 
-int32_t sawtooth_buf1[200];
-int32_t sawtooth_buf2[200];
-int32_t signal_buf[200];
-int32_t signal_buf1[200];
-int32_t signal_buf2[200];
-int32_t kalman_buf1[200];
-int32_t kalman_buf2[200];
-int32_t peaks_buff1[200];
-int32_t peaks_buff2[200];
+#define BUFSIZE			500
+
+int32_t sawtooth_buf1[BUFSIZE];
+int32_t sawtooth_buf2[BUFSIZE];
+int32_t signal_buf[BUFSIZE];
+int32_t signal_buf1[BUFSIZE];
+int32_t signal_buf2[BUFSIZE];
+int32_t kalman_buf1[BUFSIZE];
+int32_t kalman_buf2[BUFSIZE];
+int32_t peaks_buff1[BUFSIZE];
+int32_t peaks_buff2[BUFSIZE];
 volatile int signal_buffer_in_queue = 1;
 volatile int gidxB = 0;
 volatile int gidxA = 0;
 
 volatile uint32_t relative_sawtooth_voltage = 0;
 
+//int FindPeak(uint32_t *sig)
+//{
+//
+//	if((sig[0] < sig[1]) && (sig[2] < sig[1]))
+//	{
+//		return 1;
+//	}
+//	else
+//	{
+//		return 0;
+//	}
+//}
+
 int FindPeak(uint32_t *sig)
 {
 
-	if((sig[0] < sig[1]) && (sig[2] < sig[1]))
+	if((sig[1] < sig[2]) && (sig[3] < sig[2]))
 	{
-		return 1;
+		if((sig[0] < sig[2]))
+		{
+			return 1;
+		}
 	}
-	else
+
+
 	{
 		return 0;
 	}
@@ -220,7 +239,7 @@ static float P_k1_k1;
 
 static float Q = 0.0001;//Q: Regulation noise, Q increases, dynamic response becomes faster, and convergence stability becomes worse
 //static float Q = 0.0005;//Q: Regulation noise, Q increases, dynamic response becomes faster, and convergence stability becomes worse
-static float R = 0.005; //R: Test noise, R increases, dynamic response becomes slower, convergence stability becomes better
+static float R = 0.025; //R: Test noise, R increases, dynamic response becomes slower, convergence stability becomes better
 //static float R = 0.2;
 static float Kg = 0;
 static float P_k_k1 = 0.5;
@@ -577,7 +596,7 @@ if (HAL_TIM_Base_Start_IT(&Tim4Handle) != HAL_OK)
     		if(adcConversionComplete == 1)
 			{
 			  adcConversionComplete = 0;
-			  for(lidxA=0;lidxA<200;lidxA++)
+			  for(lidxA=0;lidxA<BUFSIZE;lidxA++)
 			  {
 				  //myprintf("A0:%d, A1:%d\n", signal_buf[lidxA], sawtooth_buf[lidxA]);
 				  if(signal_buffer_in_queue == 2)
@@ -597,6 +616,13 @@ if (HAL_TIM_Base_Start_IT(&Tim4Handle) != HAL_OK)
 			rx_flagA = 0;
 			rx_flagB = 0;
     	}
+
+    	if(rx_flagB == 1)
+		{
+		  myprintf("Sawtooth Voltage : %d\r\n", relative_sawtooth_voltage);
+		  HAL_Delay(100);
+		  rx_flagB = 0;
+		}
 
     	//__dripA = 1;
     }
@@ -1148,7 +1174,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *AdcHandle)
 
 	  	if(rx_flagA == 0)
 	  	{
-	  		if(gidxB == 200)
+	  		if(gidxB == BUFSIZE)
 	  		{
 	  			if(signal_buffer_in_queue == 1)
 	  			{
@@ -1174,7 +1200,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *AdcHandle)
 	  			}
 	  		}
 
-	  		if(gidxB == 195)
+	  		if(gidxB == (BUFSIZE - 5))
 	  		{
 	  			midlineA = (((gmaxA - gminA)/2) + gminA);
 	  		}
@@ -1191,7 +1217,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *AdcHandle)
 	  				gmaxA = kalman_buf1[0];
 	  			}
 
-	  			if((gidxB >= 5) && (gidxB < 190))
+	  			if((gidxB >= 5) && (gidxB < (BUFSIZE - 10)))
 	  			{
 
 	  				if(FindPeak(&kalman_buf1[gidxB-3]) && (kalman_buf1[gidxB-3] > midlineA))
@@ -1199,8 +1225,9 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *AdcHandle)
 	  					if(dripOff == 0)
 	  					{
 	  						peaks_buff1[gidxB] = 2000;
-	  						dripOff = 20;
-	  						relative_sawtooth_voltage = (3300000 / 4096) * sawtooth_buf1[gidxB-3]; // sawtooth_buf1[gidxB-3]; //
+	  						dripOff = 120;
+	  						relative_sawtooth_voltage = (3300000 / 65535) * sawtooth_buf1[gidxB-3]; // sawtooth_buf1[gidxB-3]; //
+	  						myprintf("Sawtooth Voltage : %d\r\n", relative_sawtooth_voltage);
 	  					}
 	  					else
 	  					{
@@ -1229,7 +1256,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *AdcHandle)
 	  				gmaxA = kalman_buf2[0];
 	  			}
 
-	  			if((gidxB >= 5) && (gidxB < 190))
+	  			if((gidxB >= 5) && (gidxB < (BUFSIZE - 10)))
 	  			{
 	  				if(FindPeak(&kalman_buf2[gidxB-3]) && (kalman_buf2[gidxB-3] > midlineA))
 	  				{
@@ -1237,7 +1264,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *AdcHandle)
 	  					{
 	  						peaks_buff2[gidxB] = 2000;
 	  						relative_sawtooth_voltage = (3300000 / 4096) * sawtooth_buf2[gidxB-3]; // sawtooth_buf2[gidxB-3]; //
-	  						dripOff = 20;
+	  						dripOff = 120;
 	  					}
 	  					else
 	  					{
@@ -1410,4 +1437,3 @@ static void CPU_CACHE_Enable(void)
 /**
   * @}
   */
-
